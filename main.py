@@ -3,6 +3,9 @@ from tkinter import ttk
 from yahoo_fin import stock_info as si
 from yahoo_fin import options
 
+from tkinter import * 
+from tkinter.ttk import *
+
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -17,70 +20,106 @@ other_tickers = si.tickers_other()
 
 
 
-
 class Application(tk.Frame):
         def __init__(self, master=None):
                 tk.Frame.__init__(self,master)
                 self.createWidgets()
 
         def createWidgets(self):
-                
-                #Title~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                ghost = tk.Label(font=("Calibri", 20), 
-                        width=5,
-                        background="black"  # Set the background color to black
-                )
-                ghost.grid(row=0,column=0) 
 
-                ghost2 = tk.Label(font=("Calibri", 20), 
-                        width=5,
-                        background="black"  # Set the background color to black
+                #Button images~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                photo = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_update.png")
+
+                ainfo = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_Ainfo.png")
+                bsimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_BS.png")
+                cfimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_CF.png")
+
+                dayimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_d.png")
+                wkimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_wk.png")
+                moimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_mo.png")
+
+                gainimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_gain.png")
+                lossimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_lose.png")
+                actimg = PhotoImage(file = r"C:\Users\User\Desktop\Python coding\finance\StockScreening\StockScreener\images\button_act.png")
+
+
+                #Title~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                ghost = tk.Label(font=("Calibri", 24), 
+                        width=7,
+                        background="gray15"  
                 )
-                ghost2.grid(row=0,column=3)
+                ghost.grid(row=0,column=0, sticky='w') 
+
+                ghost2 = tk.Label(font=("Calibri", 24), 
+                        width=6,
+                        background="gray15"  
+                )
+                ghost2.grid(row=0,column=3, sticky='w')
 
                 greeting = tk.Label(text="Stock Screener",
-                        font=("Calibri", 20), 
-                        width=65,
-                        foreground="white",  # Set the text color to white
-                        background="black"  # Set the background color to black
+                        font=("Calibri", 24), 
+                        width=50,
+                        foreground="white",  
+                        background="gray15"  
                 )
-                greeting.grid(row=0,column=1)    
+                greeting.grid(row=0,column=1, sticky='w')    
                 
+                #Ticker live~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                live = tk.Label(text="Current Price:",
+                        font=("Calibri", 12), 
+                        width=11,
+                        fg='white',
+                        background="gray25"  
+                )
+                live.grid(row=1,column=0, sticky='w') 
+
+                self.price = tk.Label(font=("Calibri", 12), 
+                        width=10,
+                        fg='white',
+                        background="gray25"  
+                )
+                self.price.grid(row=2,column=0,sticky='nw')
+
 
                 #Ticker Search~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 search_box = tk.Frame(
                         master=root,
+                        background="gray25",
                         borderwidth=1
                 )
                 search_box.grid(row=1,column=1)
 
-                self.entry = tk.Entry(master = search_box,fg="black", bg="white", width=27)
+                self.entry = tk.Entry(master = search_box,fg="black", bg="white", width=20)
                 self.entry.insert(0, "MSFT")
-                self.entry.grid(row=1,column=2)
+                self.entry.grid(row=1,column=2,sticky="w")
 
 
                 hint = tk.Label(master = search_box,
-                        text="Enter ticker eg. MSFT", 
-                        width=30,
+                        text="Enter ticker (eg. MSFT)",
+                        background="gray25",
+                        fg= 'white', 
+                        width=20,
                 )
-                hint.grid(row=1,column=3,sticky="w")  
+                hint.grid(row=1,column=1,padx =5,sticky="e")  
 
 
 
                 #Chart~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 fig=plt.figure(figsize=(8,4))
+                fig.patch.set_facecolor('lightgray')
                 ax=fig.add_subplot(111)
                 canvas=FigureCanvasTkAgg(fig,master=root)
                 canvas.get_tk_widget().grid(row=3,column=1,sticky="w")
 
                 self.update_btn = tk.Button(
                         master=root,
-                        text="Update Chart",
-                        font=("Calibri", 14),
-                        width=15,
-                        height=1,
-                        bg="black",
+                        text="Update",
+                        font=("Calibri", 13),
+                        activebackground='gray25',
+                        bg="gray25",
+                        borderwidth=0,
                         fg="white",
+                        image = photo,
                         command=lambda: self.plot(canvas,
                                 ax, 
                                 self.entry.get(), 
@@ -88,6 +127,7 @@ class Application(tk.Frame):
                                 self.strtDateEntry.get(),
                                 self.endDateEntry.get())
                 )
+                self.update_btn.image= photo
                 self.update_btn.grid(row=2,column=1, padx=3, pady=3)
 
 
@@ -104,12 +144,15 @@ class Application(tk.Frame):
 
                 intervals = tk.Frame(
                         master=root,
+                        background="gray25",
                         borderwidth=1
                 )
-                intervals.grid(row=4,column=1, pady=3, sticky="w")
+                intervals.grid(row=4,column=1, pady=1, sticky="w")
 
                 interval_text = tk.Label(master = intervals,
-                        text="Current interval: ", 
+                        text="Current interval: ",
+                        background="gray25",
+                        fg='white', 
                 )
                 interval_text.grid(row=1,column=0)  
 
@@ -122,46 +165,62 @@ class Application(tk.Frame):
                 self.oned_btn = tk.Button(
                         master=intervals,
                         text="1d",
-                        width=3,
-                        height=1,
+                        activebackground='gray25',
+                        bg="gray25",
+                        borderwidth=0,
+                        fg="white",
+                        image = dayimg,
                         command=lambda: dayDisplay()
                 )
-                self.oned_btn.grid(row=1,column=2, padx=10)
+                self.oned_btn.image= dayimg
+                self.oned_btn.grid(row=1,column=2, padx=5)
 
                 self.week_btn = tk.Button(
                         master=intervals,
                         text="1wk",
-                        width=3,
-                        height=1,
+                        activebackground='gray25',
+                        bg="gray25",
+                        borderwidth=0,
+                        fg="white",
+                        image = wkimg,
                         command=lambda: weekDisplay()
                 )
-                self.week_btn.grid(row=1,column=3, padx=10)
+                self.week_btn.image= wkimg
+                self.week_btn.grid(row=1,column=3, padx=5)
 
                 self.month_btn = tk.Button(
                         master=intervals,
                         text="1mo",
-                        width=3,
-                        height=1,
+                        activebackground='gray25',
+                        bg="gray25",
+                        borderwidth=0,
+                        fg="white",
+                        image = moimg,
                         command=lambda: monthDisplay()
                 )
-                self.month_btn.grid(row=1,column=4, padx=10)
+                self.month_btn.image= moimg
+                self.month_btn.grid(row=1,column=4, padx=5)
 
 
                 #Date selection~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
                 dateFrame = tk.Frame(
                         master=root,
+                        background="gray25",
                         borderwidth=1
                 )
                 dateFrame.grid(row=5,column=1, pady=3)
 
                 stdateFrame = tk.Frame(
-                        master=dateFrame,
+                        master=dateFrame, 
+                        background="gray25" 
                 )
                 stdateFrame.grid(row=1,column=1, padx = 20, sticky="w")
 
                 startdate_text = tk.Label(master = stdateFrame,
-                        text="Start Date: ", 
+                        text="Start Date: ",
+                        foreground="white",  
+                        background="gray25"  
                 )
                 startdate_text.grid(row=1,column=0)  
 
@@ -170,12 +229,15 @@ class Application(tk.Frame):
                 self.strtDateEntry.grid(row=1,column=1)
 
                 edateFrame = tk.Frame(
-                        master=dateFrame,
+                        master=dateFrame,  
+                        background="gray25" 
                 )
                 edateFrame.grid(row=1,column=2,padx = 20, sticky="e")
 
                 enddate_text = tk.Label(master = edateFrame,
                         text="End Date: ", 
+                        foreground="white",  
+                        background="gray25" 
                 )
                 enddate_text.grid(row=1,column=1)  
 
@@ -190,13 +252,15 @@ class Application(tk.Frame):
 
                 infoframe = tk.Frame(
                         master=root,
-                        background="black", 
+                        background="gray25", 
                         borderwidth=1
                 )
-                infoframe.grid(row=6,column=1, pady=3)
+                infoframe.grid(row=6,column=1, pady=15)
 
                 down_text = tk.Label(master = infoframe,
                         font=("Calibri", 12),
+                        background="gray25",
+                        fg= 'white',
                         text="Download: ", 
                 )
                 down_text.grid(row=1,column=0)  
@@ -205,62 +269,85 @@ class Application(tk.Frame):
                 self.anal_btn = tk.Button(
                         master=infoframe,
                         text="Analyst Info",
-                        height=1,
+                        bg="gray25",
+                        fg="black",
+                        activebackground='gray25',
+                        borderwidth=0,
+                        image = ainfo,
                         command=lambda: self.down_anal(self.entry.get())
                 )
+                self.anal_btn.image= ainfo
                 self.anal_btn.grid(row=1,column=2, padx=10)
 
                 self.bs_btn = tk.Button(
                         master=infoframe,
                         text="Balance Sheet",
-                        height=1,
+                        bg="gray25",
+                        fg="black",
+                        activebackground='gray25',
+                        borderwidth=0,
+                        image = bsimg,
                         command=lambda: self.down_bs(self.entry.get())
                 )
+                self.bs_btn.image=bsimg
                 self.bs_btn.grid(row=1,column=3, padx=10)
 
                 self.cf_btn = tk.Button(
                         master=infoframe,
                         text="Cash Flows",
-                        height=1,
+                        bg="gray25",
+                        fg="black",
+                        activebackground='gray25',
+                        borderwidth=0,
+                        image = cfimg,
                         command=lambda: self.down_cf(self.entry.get())
                 )
+                self.cf_btn.image=cfimg
                 self.cf_btn.grid(row=1,column=4, padx=10)
 
                 researchframe = tk.Frame(
                         master=root,
-                        background="blue", 
+                        background="gray25", 
+                        width=100,
                         borderwidth=1
                 )
-                researchframe.grid(row=7,column=1, pady=3)
+                researchframe.grid(row=7,column=1, pady=15)
 
                 self.gain_btn = tk.Button(
                         master=researchframe,
-                        text="Top day gainers",
-                        height=1,
+                        activebackground='gray25',
+                        bg="gray25",
+                        borderwidth=0,
+                        fg="white",
+                        image = gainimg,
                         command = lambda: self.topg()
                 )
-                self.gain_btn.grid(row=1,column=2, padx=10)
+                self.gain_btn.image= gainimg
+                self.gain_btn.grid(row=1,column=2, padx=50)
 
                 self.loss_btn = tk.Button(
                         master=researchframe,
-                        text="Top day losers",
-                        height=1,
+                        activebackground='gray25',
+                        bg="gray25",
+                        borderwidth=0,
+                        fg="white",
+                        image = lossimg,
                         command = lambda: self.topl()
                 )
-                self.loss_btn.grid(row=1,column=3, padx=10)
+                self.loss_btn.image= lossimg
+                self.loss_btn.grid(row=1,column=3, padx=50)
 
                 self.active_btn = tk.Button(
                         master=researchframe,
-                        activebackground='black'
-                        ,activeforeground='green'
-                        ,background='black'
-                        ,foreground='lime'
-                        ,relief='solid',
-                        text="Top most active",
-                        height=1,
+                        activebackground='gray25',
+                        bg="gray25",
+                        borderwidth=0,
+                        fg="white",
+                        image = actimg,
                         command = lambda: self.topact()
                 )
-                self.active_btn.grid(row=1,column=4, padx=10)
+                self.active_btn.image= actimg
+                self.active_btn.grid(row=1,column=4, padx=50)
 
                 dispframe = tk.Frame(
                         master=root,
@@ -279,14 +366,11 @@ class Application(tk.Frame):
                         self.listBox.heading(col, text=col)  
                 self.listBox.pack(side='left')
 
+
                 self.vsb = ttk.Scrollbar(master=dispframe, orient="vertical", command=self.listBox.yview)
                 self.vsb.pack(side='right', fill='y')
 
                 self.listBox.configure(yscrollcommand=self.vsb.set)
-
-
-
-
 
                 
         def down_anal(self,ticker):
@@ -341,10 +425,13 @@ class Application(tk.Frame):
                                 topact.loc[x,'Change'],
                                 topact.loc[x,'% Change']))   
         
-
+        
 
         def plot(self,canvas,ax, ticker, interval,stDate,eDate):
                 
+                answer = si.get_live_price(ticker)
+                self.price["text"] = '  $' + str("{:6.2f}".format(answer))
+
                 ax.clear()         # clear axes from previous plot
 
                 
@@ -352,19 +439,23 @@ class Application(tk.Frame):
                 df1['close'].plot(kind='line', 
                         legend=True, 
                         ax=ax, 
-                        color='b',
-                        marker='o', 
+                        color='xkcd:lightish blue',
+                        marker='.', 
                         fontsize=10)
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
+                ax.set_facecolor("whitesmoke")
                 ax.set_title(ticker + ' chart')
                 ax.set_ylabel('Share prices ($)')
                 ax.set_xlabel('Date')
                 ax.grid(b=None, which='major', axis='both')
                 canvas.draw()
-                
 
+        
 
 root=tk.Tk()
 root.title("Stock Screener")
+root.configure(bg='gray25')
 app=Application(master=root)
 app.mainloop()
 
